@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Qibla Direction</string>
+	<string>Qibla & Prayer Times</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -46,8 +46,8 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to calculate the accurate direction to Qibla (Kaaba in Mecca)</string>
+	<string>We need your location to calculate accurate Qibla direction and daily prayer times.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We need your location to calculate the accurate direction to Qibla (Kaaba in Mecca)</string>
+	<string>We need your location to calculate accurate Qibla direction and daily prayer times.</string>
 </dict>
 </plist>

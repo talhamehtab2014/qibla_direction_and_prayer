@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:qibla_direction/providers/qibla_provider.dart';
+import 'package:qibla_direction/providers/prayer_provider.dart';
 import 'package:qibla_direction/providers/theme_provider.dart';
+import 'package:qibla_direction/providers/hadith_provider.dart';
 import 'package:qibla_direction/screens/splash_screen.dart';
 import 'package:qibla_direction/theme/app_theme.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => QiblaProvider()),
+        ChangeNotifierProvider(create: (_) => PrayerProvider()),
+        ChangeNotifierProvider(
+          create: (_) => HadithProvider()..fetchNewHadith(),
+        ),
+      ],
       child: const MyApp(),
     ),
   );
@@ -28,7 +38,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
-          title: 'Qibla Direction',
+          title: 'Qibla & Prayer Times',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
