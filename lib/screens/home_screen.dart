@@ -47,6 +47,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: Container(
+        height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
