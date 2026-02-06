@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:qibla_direction/firebase_options.dart';
 import 'package:qibla_direction/providers/qibla_provider.dart';
 import 'package:qibla_direction/providers/prayer_provider.dart';
 import 'package:qibla_direction/providers/theme_provider.dart';
 import 'package:qibla_direction/providers/hadith_provider.dart';
 import 'package:qibla_direction/screens/splash_screen.dart';
 import 'package:qibla_direction/theme/app_theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(
     MultiProvider(
       providers: [
