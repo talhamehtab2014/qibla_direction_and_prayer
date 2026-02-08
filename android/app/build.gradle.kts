@@ -16,7 +16,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.islamicapp.qibla_direction"
+    namespace = "com.example.qibla_direction"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
