@@ -13,11 +13,13 @@ class PrayerProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   String? _upcomingPrayer;
+  String? _currentPrayer;
   Duration? _timeLeft;
   Timer? _timer;
   String _locationName = 'Current Location';
   double? _latitude;
   double? _longitude;
+  bool _isDisposed = false;
 
   // Settings
   int _selectedMethod = 4; // Default: Umm Al-Qura University, Makkah
@@ -29,6 +31,7 @@ class PrayerProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   String? get upcomingPrayer => _upcomingPrayer;
+  String? get currentPrayer => _currentPrayer;
   Duration? get timeLeft => _timeLeft;
   String get locationName => _locationName;
   double? get latitude => _latitude;
@@ -45,7 +48,7 @@ class PrayerProvider extends ChangeNotifier {
   Future<void> initialize() async {
     _isLoading = true;
     _errorMessage = null;
-    notifyListeners();
+    if (!_isDisposed) notifyListeners();
 
     await _loadSettings();
 
@@ -80,11 +83,11 @@ class PrayerProvider extends ChangeNotifier {
       _startTimer();
 
       _isLoading = false;
-      notifyListeners();
+      if (!_isDisposed) notifyListeners();
     } catch (e) {
       _isLoading = false;
       _errorMessage = e.toString();
-      notifyListeners();
+      if (!_isDisposed) notifyListeners();
     }
   }
 
@@ -145,22 +148,27 @@ class PrayerProvider extends ChangeNotifier {
 
     String? next;
     DateTime? nextTime;
+    String? current;
 
-    for (var entry in timings.entries) {
-      final prayerTime = _parseTime(entry.value);
+    final entries = timings.entries.toList();
+
+    for (int i = 0; i < entries.length; i++) {
+      final prayerTime = _parseTime(entries[i].value);
+
       if (prayerTime.isAfter(now)) {
         if (nextTime == null || prayerTime.isBefore(nextTime)) {
-          next = entry.key;
+          next = entries[i].key;
           nextTime = prayerTime;
         }
+      } else {
+        current = entries[i].key;
       }
     }
 
-    // If no more prayers today, next is Fajr tomorrow
-    next ??= 'Fajr';
+    _upcomingPrayer = next ?? 'Fajr';
+    _currentPrayer = current ?? 'Isha';
 
-    _upcomingPrayer = next;
-    _calculateTimeLeft();
+    if (!_isDisposed) notifyListeners();
   }
 
   void _calculateTimeLeft() {
@@ -169,17 +177,25 @@ class PrayerProvider extends ChangeNotifier {
     final now = DateTime.now();
     final timingStr = _prayerTimes!.asMap[_upcomingPrayer];
 
-    if (timingStr == null && _upcomingPrayer == 'Fajr') {
-      // Logic for Fajr tomorrow could be added here if needed for exact countdown
-      // For now, just set a placeholder or refresh at midnight
-      _timeLeft = Duration.zero;
-    } else if (timingStr != null) {
-      final prayerTime = _parseTime(timingStr);
-      _timeLeft = prayerTime.difference(now);
+    if (timingStr != null) {
+      DateTime prayerTime = _parseTime(timingStr);
 
-      if (_timeLeft!.isNegative) {
-        _updateUpcomingPrayer();
+      // If prayer time is in the past, it might be Fajr for tomorrow
+      if (prayerTime.isBefore(now)) {
+        if (_upcomingPrayer == 'Fajr') {
+          prayerTime = prayerTime.add(const Duration(days: 1));
+        } else {
+          // Some other prayer just passed, update the upcoming prayer
+          _updateUpcomingPrayer();
+          return; // The next timer tick will calculate for the new upcoming prayer
+        }
       }
+
+      _timeLeft = prayerTime.difference(now);
+    } else if (_upcomingPrayer == 'Fajr') {
+      // Small helper if Fajr is not in the map for some reason but we know it's next
+      // This is a safety guard
+      _timeLeft = Duration.zero;
     }
 
     notifyListeners();
@@ -199,6 +215,7 @@ class PrayerProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
     _timer?.cancel();
     super.dispose();
   }

@@ -274,13 +274,12 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
                       ),
                       child: Column(
                         children: prayerTimes.asMap.entries.map((entry) {
-                          final isUpcoming =
-                              entry.key == provider.upcomingPrayer;
+                          final isCurrent = entry.key == provider.currentPrayer;
                           return _buildPrayerTimeRow(
                             context,
                             entry.key,
                             entry.value,
-                            isUpcoming,
+                            isCurrent,
                           );
                         }).toList(),
                       ),

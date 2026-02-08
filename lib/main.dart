@@ -9,10 +9,12 @@ import 'package:qibla_direction/providers/hadith_provider.dart';
 import 'package:qibla_direction/screens/splash_screen.dart';
 import 'package:qibla_direction/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await MobileAds.instance.initialize();
 
   runApp(
     MultiProvider(

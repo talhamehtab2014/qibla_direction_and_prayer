@@ -21,6 +21,7 @@ class QiblaProvider extends ChangeNotifier {
   bool _isCompassAvailable = false;
   bool _isPermanentlyDenied = false;
   String? _errorMessage;
+  bool _isDisposed = false;
 
   StreamSubscription<CompassEvent>? _compassSubscription;
   StreamSubscription<double>? _qiblaSubscription;
@@ -42,7 +43,7 @@ class QiblaProvider extends ChangeNotifier {
     _isLoading = true;
     _errorMessage = null;
     _isPermanentlyDenied = false;
-    notifyListeners();
+    if (!_isDisposed) notifyListeners();
 
     try {
       // Check compass availability
@@ -59,19 +60,19 @@ class QiblaProvider extends ChangeNotifier {
       _startCompassStream();
 
       _isLoading = false;
-      notifyListeners();
+      if (!_isDisposed) notifyListeners();
     } on LocationPermissionPermanentlyDeniedException catch (e) {
       _isLoading = false;
       _errorMessage = e.toString();
       _hasPermission = false;
       _isPermanentlyDenied = true;
-      notifyListeners();
+      if (!_isDisposed) notifyListeners();
     } catch (e) {
       _isLoading = false;
       _errorMessage = e.toString();
       _hasPermission = false;
       _isPermanentlyDenied = false;
-      notifyListeners();
+      if (!_isDisposed) notifyListeners();
     }
   }
 
@@ -100,7 +101,7 @@ class QiblaProvider extends ChangeNotifier {
           _needsCalibration = event.accuracy != null && event.accuracy! > 15;
         }
 
-        notifyListeners();
+        if (!_isDisposed) notifyListeners();
       });
     }
 
@@ -111,7 +112,7 @@ class QiblaProvider extends ChangeNotifier {
     if (qiblaStream != null) {
       _qiblaSubscription = qiblaStream.listen((direction) {
         _qiblaDirection = direction;
-        notifyListeners();
+        if (!_isDisposed) notifyListeners();
       });
     }
   }
@@ -126,7 +127,7 @@ class QiblaProvider extends ChangeNotifier {
       _qiblaSubscription?.cancel();
       _startCompassStream();
 
-      notifyListeners();
+      if (!_isDisposed) notifyListeners();
     } catch (e) {
       _errorMessage = 'Failed to refresh location: ${e.toString()}';
       notifyListeners();
@@ -135,6 +136,7 @@ class QiblaProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
     _compassSubscription?.cancel();
     _qiblaSubscription?.cancel();
     _compassService.dispose();

@@ -7,6 +7,7 @@ import 'package:qibla_direction/providers/theme_provider.dart';
 import 'package:qibla_direction/providers/hadith_provider.dart';
 import 'package:qibla_direction/screens/qibla_compass_screen.dart';
 import 'package:qibla_direction/screens/prayer_times_screen.dart';
+import 'package:qibla_direction/widgets/banner_ad_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -290,6 +291,8 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  SizedBox(height: 24.h),
+                  const BannerAdWidget(),
                 ],
               ),
             ),
