@@ -2,6 +2,9 @@
     <!-- Location permissions for Qibla compass -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Internet permissions for Daily Hadith -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="Qibla &amp; Prayer Times"
         android:name="${applicationName}"
