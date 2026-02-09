@@ -8,6 +8,8 @@ import 'package:qibla_direction/providers/hadith_provider.dart';
 import 'package:qibla_direction/screens/qibla_compass_screen.dart';
 import 'package:qibla_direction/screens/prayer_times_screen.dart';
 import 'package:qibla_direction/widgets/banner_ad_widget.dart';
+import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:qibla_direction/widgets/hadith_swipe_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -86,92 +88,43 @@ class HomeScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 24.h),
 
-                  // Random Hadith Card
+                  // Swipeable Hadith Cards
                   Consumer<HadithProvider>(
                     builder: (context, hadithProvider, child) {
                       if (hadithProvider.isLoading) {
                         return _buildShimmerLoading();
                       }
-                      final hadith = hadithProvider.currentHadith;
-                      if (hadith == null) return const SizedBox.shrink();
+                      final hadiths = hadithProvider.hadiths;
+                      if (hadiths.isEmpty) return const SizedBox.shrink();
 
-                      return Container(
-                        padding: EdgeInsets.all(24.r),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              primaryColor,
-                              primaryColor.withOpacity(0.8),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(24.r),
-                          boxShadow: [
-                            BoxShadow(
-                              color: primaryColor.withOpacity(0.3),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.format_quote,
-                                  color: Colors.white,
-                                  size: 24.r,
-                                ),
-                                SizedBox(width: 8.w),
-                                Text(
-                                  'Daily Hadith',
-                                  style: GoogleFonts.outfit(
-                                    color: Colors.white.withOpacity(0.9),
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 16.h),
-                            Text(
-                              hadith.text,
-                              style: GoogleFonts.outfit(
-                                color: Colors.white,
-                                fontSize: 16.sp,
-                                height: 1.5,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      '- ${hadith.narrator ?? "Unknown Narrator"}',
-                                      style: GoogleFonts.outfit(
-                                        color: Colors.white.withOpacity(0.9),
-                                        fontSize: 13.sp,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      hadith.source ?? "Sunnah",
-                                      style: GoogleFonts.outfit(
-                                        color: Colors.white.withOpacity(0.7),
-                                        fontSize: 11.sp,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                      final cardColors = [
+                        const Color(0xFF2E7D32), // Forest Green
+                        const Color(0xFF1B5E20), // Deep Islamic Green
+                        const Color(0xFF388E3C), // Medium Green
+                        const Color(0xFF43A047), // Darker Sage
+                        const Color(0xFF004D40), // Dark Teal-Green
+                        const Color(0xFF00695C), // Pine Green
+                      ];
+
+                      return SizedBox(
+                        height: 220.h,
+                        child: CardSwiper(
+                          cardsCount: hadiths.length,
+                          numberOfCardsDisplayed: hadiths.length > 1 ? 2 : 1,
+                          backCardOffset: const Offset(0, 23),
+                          padding: EdgeInsets.zero,
+                          cardBuilder:
+                              (
+                                context,
+                                index,
+                                horizontalThresholdPercentage,
+                                verticalThresholdPercentage,
+                              ) {
+                                return HadithSwipeCard(
+                                  hadith: hadiths[index],
+                                  color: cardColors[index % cardColors.length],
+                                );
+                              },
                         ),
                       );
                     },

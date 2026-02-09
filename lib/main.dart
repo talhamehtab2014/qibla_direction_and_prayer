@@ -22,9 +22,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => QiblaProvider()),
         ChangeNotifierProvider(create: (_) => PrayerProvider()),
-        ChangeNotifierProvider(
-          create: (_) => HadithProvider()..fetchNewHadith(),
-        ),
+        ChangeNotifierProvider(create: (_) => HadithProvider()..fetchHadiths()),
       ],
       child: const MyApp(),
     ),

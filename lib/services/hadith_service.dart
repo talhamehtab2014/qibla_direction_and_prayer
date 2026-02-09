@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:qibla_direction/models/hadith.dart';
@@ -51,26 +50,25 @@ class HadithService {
     ),
   ];
 
-  Future<Hadith> fetchRandomHadith() async {
+  Future<List<Hadith>> fetchAllHadiths() async {
     try {
-      // Fetch all hadiths from Firestore (assuming a relatively small collection for "Daily Hadith")
-      // For very large collections, we would use a different randomizing strategy.
       final QuerySnapshot snapshot = await _firestore
           .collection('islamic_hadiths')
+          .where('isActive', isEqualTo: true)
           .get();
 
       if (snapshot.docs.isNotEmpty) {
-        final random = Random();
-        final doc = snapshot.docs.where((e) => e['isActive'] == true).toList();
-        final docsList = doc[random.nextInt(doc.length)];
-        return Hadith.fromFirestore(docsList.data() as Map<String, dynamic>);
+        return snapshot.docs
+            .map(
+              (doc) => Hadith.fromFirestore(doc.data() as Map<String, dynamic>),
+            )
+            .toList();
       }
     } catch (e) {
-      debugPrint('Error fetching Hadith from Firestore: $e');
+      debugPrint('Error fetching all Hadiths from Firestore: $e');
     }
 
     // Fallback if Firestore fails or is empty
-    final random = Random();
-    return _fallbackHadiths[random.nextInt(_fallbackHadiths.length)];
+    return List.from(_fallbackHadiths)..shuffle();
   }
 }
