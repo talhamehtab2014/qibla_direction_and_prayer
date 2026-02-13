@@ -9,6 +9,7 @@ import 'package:qibla_direction/providers/hadith_provider.dart';
 import 'package:qibla_direction/providers/ramadan_provider.dart';
 import 'package:qibla_direction/providers/adhkar_provider.dart';
 import 'package:qibla_direction/providers/remote_config_provider.dart';
+import 'package:qibla_direction/providers/ramadan_timing_provider.dart';
 import 'package:qibla_direction/screens/splash_screen.dart';
 import 'package:qibla_direction/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,6 +33,9 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => AdhkarProvider()..loadAdhkar()),
         ChangeNotifierProvider(
           create: (_) => RemoteConfigProvider()..initialize(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => RamadanTimingProvider()..fetchTodayTiming(),
         ),
       ],
       child: const MyApp(),

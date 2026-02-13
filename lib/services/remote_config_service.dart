@@ -11,6 +11,7 @@ class RemoteConfigService {
   static const String _showPrayersTimeKey = 'showPrayersTime';
   static const String _showDailyAdhkarKey = 'showDailyAdhkar';
   static const String _isShowAdsKey = 'isShowAds';
+  static const String _showRamadanTimingKey = 'showRamadanTiming';
 
   Future<void> initialize() async {
     try {
@@ -32,6 +33,7 @@ class RemoteConfigService {
         _showPrayersTimeKey: true,
         _showDailyAdhkarKey: true,
         _isShowAdsKey: true,
+        _showRamadanTimingKey: true,
       });
 
       if (kDebugMode) {
@@ -103,6 +105,14 @@ class RemoteConfigService {
     final value = _remoteConfig.getBool(_isShowAdsKey);
     if (kDebugMode) {
       print('RemoteConfig: Getting $value for key $_isShowAdsKey');
+    }
+    return value;
+  }
+
+  bool get showRamadanTiming {
+    final value = _remoteConfig.getBool(_showRamadanTimingKey);
+    if (kDebugMode) {
+      print('RemoteConfig: Getting $value for key $_showRamadanTimingKey');
     }
     return value;
   }

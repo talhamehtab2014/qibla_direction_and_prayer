@@ -33,15 +33,14 @@ class RamadanCalendarScreen extends StatelessWidget {
             return const Center(child: Text('No data available'));
           }
 
-          final now = DateTime.now();
-          final todayStr = DateFormat('dd-MM-yyyy').format(now);
-
           return ListView.builder(
             padding: EdgeInsets.all(16.r),
             itemCount: provider.ramadanDays.length,
             itemBuilder: (context, index) {
               final day = provider.ramadanDays[index];
-              final isToday = day.gregorian.date == todayStr;
+              final now = DateTime.now();
+              final todayFormatter = DateFormat('d MMM yyyy');
+              final isToday = day.date == todayFormatter.format(now);
 
               return Card(
                 margin: EdgeInsets.only(bottom: 12.h),
@@ -81,7 +80,7 @@ class RamadanCalendarScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              day.hijri.day,
+                              '${day.day}',
                               style: GoogleFonts.outfit(
                                 color: Colors.white,
                                 fontSize: 18.sp,
@@ -97,19 +96,48 @@ class RamadanCalendarScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${day.gregorian.day} ${day.gregorian.monthEn} ${day.gregorian.year}',
+                              day.date,
                               style: GoogleFonts.outfit(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
                                 color: isDark ? Colors.white : Colors.black87,
                               ),
                             ),
-                            Text(
-                              '${day.hijri.day} ${day.hijri.monthEn} ${day.hijri.year}',
-                              style: GoogleFonts.outfit(
-                                fontSize: 13.sp,
-                                color: isDark ? Colors.white70 : Colors.black54,
-                              ),
+                            SizedBox(height: 4.h),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.nightlight_round,
+                                  size: 14.r,
+                                  color: theme.primaryColor,
+                                ),
+                                SizedBox(width: 4.w),
+                                Text(
+                                  'Sehri: ${day.sehri}',
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 12.sp,
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.black54,
+                                  ),
+                                ),
+                                SizedBox(width: 12.w),
+                                Icon(
+                                  Icons.wb_twilight,
+                                  size: 14.r,
+                                  color: Colors.orange,
+                                ),
+                                SizedBox(width: 4.w),
+                                Text(
+                                  'Iftar: ${day.iftar}',
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 12.sp,
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.black54,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

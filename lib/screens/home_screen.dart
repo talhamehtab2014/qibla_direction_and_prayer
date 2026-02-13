@@ -13,6 +13,7 @@ import 'package:qibla_direction/widgets/hadith_swipe_card.dart';
 import 'package:qibla_direction/screens/ramadan_calendar_screen.dart';
 import 'package:qibla_direction/screens/adhkar_details_screen.dart';
 import 'package:qibla_direction/providers/remote_config_provider.dart';
+import 'package:qibla_direction/providers/ramadan_timing_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -137,6 +138,198 @@ class HomeScreen extends StatelessWidget {
                                     );
                                   },
                             ),
+                          );
+                        },
+                      ),
+                      26.verticalSpace,
+
+                      // Ramadan Sehri & Iftar Times Card
+                      Consumer<RemoteConfigProvider>(
+                        builder: (context, remoteConfig, child) {
+                          if (!remoteConfig.showRamadanCalendar) {
+                            return const SizedBox.shrink();
+                          }
+
+                          return Consumer<RamadanTimingProvider>(
+                            builder: (context, ramadanTimingProvider, child) {
+                              if (ramadanTimingProvider.isLoading) {
+                                return Container(
+                                  height: 100.h,
+                                  width: double.infinity,
+                                  padding: EdgeInsets.all(16.r),
+                                  decoration: BoxDecoration(
+                                    color: isDark
+                                        ? Colors.white.withOpacity(0.05)
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(16.r),
+                                    border: Border.all(
+                                      color: isDark
+                                          ? Colors.white.withOpacity(0.1)
+                                          : Colors.black.withOpacity(0.05),
+                                    ),
+                                  ),
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+
+                              final timing =
+                                  ramadanTimingProvider.currentTiming;
+                              if (timing != null) {
+                                return Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.all(14.r),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        const Color(0xFF2E7D32),
+                                        const Color(0xFF1B5E20),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(16.r),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(
+                                          0xFF2E7D32,
+                                        ).withOpacity(0.3),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      // Header
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.calendar_today_rounded,
+                                                color: Colors.white,
+                                                size: 16.r,
+                                              ),
+                                              SizedBox(width: 6.w),
+                                              Text(
+                                                'Ramadan Day ${timing.day}',
+                                                style: GoogleFonts.outfit(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            timing.date,
+                                            style: GoogleFonts.outfit(
+                                              fontSize: 11.sp,
+                                              color: Colors.white.withOpacity(
+                                                0.9,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      // Times Row
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              padding: EdgeInsets.all(12.r),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white.withOpacity(
+                                                  0.15,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12.r),
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Icon(
+                                                    Icons.nightlight_round,
+                                                    color: Colors.white,
+                                                    size: 22.r,
+                                                  ),
+                                                  SizedBox(height: 6.h),
+                                                  Text(
+                                                    'Sehri',
+                                                    style: GoogleFonts.outfit(
+                                                      fontSize: 11.sp,
+                                                      color: Colors.white
+                                                          .withOpacity(0.85),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 2.h),
+                                                  Text(
+                                                    timing.sehri,
+                                                    style: GoogleFonts.outfit(
+                                                      fontSize: 16.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 12.w),
+                                          Expanded(
+                                            child: Container(
+                                              padding: EdgeInsets.all(12.r),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white.withOpacity(
+                                                  0.15,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12.r),
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Icon(
+                                                    Icons.wb_twilight,
+                                                    color: Colors.white,
+                                                    size: 22.r,
+                                                  ),
+                                                  SizedBox(height: 6.h),
+                                                  Text(
+                                                    'Iftar',
+                                                    style: GoogleFonts.outfit(
+                                                      fontSize: 11.sp,
+                                                      color: Colors.white
+                                                          .withOpacity(0.85),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 2.h),
+                                                  Text(
+                                                    timing.iftar,
+                                                    style: GoogleFonts.outfit(
+                                                      fontSize: 16.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+
+                              return const SizedBox.shrink();
+                            },
                           );
                         },
                       ),

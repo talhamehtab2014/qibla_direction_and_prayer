@@ -11,6 +11,7 @@ class RemoteConfigProvider with ChangeNotifier {
   bool get showPrayersTime => _service.showPrayersTime;
   bool get showDailyAdhkar => _service.showDailyAdhkar;
   bool get isShowAds => _service.isShowAds;
+  bool get showRamadanTiming => _service.showRamadanTiming;
 
   Future<void> initialize() async {
     await _service.initialize();
