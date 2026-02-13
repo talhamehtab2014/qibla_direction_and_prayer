@@ -309,6 +309,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
       case 'sunrise':
         return Icons.wb_sunny;
       case 'dhuhr':
+      case 'jummah':
         return Icons.wb_sunny_rounded;
       case 'asr':
         return Icons.wb_cloudy_outlined;

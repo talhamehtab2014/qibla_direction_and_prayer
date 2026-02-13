@@ -44,10 +44,13 @@ class PrayerTimes {
     );
   }
 
+  // Check if today is Friday
+  bool get _isFriday => DateTime.now().weekday == DateTime.friday;
+
   Map<String, String> get asMap => {
     'Fajr': fajr,
     'Sunrise': sunrise,
-    'Dhuhr': dhuhr,
+    _isFriday ? 'Jummah' : 'Dhuhr': dhuhr,
     'Asr': asr,
     'Maghrib': maghrib,
     'Isha': isha,
