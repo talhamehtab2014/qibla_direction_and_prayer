@@ -34,7 +34,7 @@ android {
         applicationId = "com.example.qibla_direction"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 26
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -65,4 +65,6 @@ flutter {
 
 dependencies {
     implementation("androidx.multidex:multidex:2.0.1")
+    implementation("androidx.browser:browser:1.8.0")
+    implementation("androidx.javascriptengine:javascriptengine:1.0.0-beta01")
 }

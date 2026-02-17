@@ -23,7 +23,7 @@ class AdhkarDetailsScreen extends StatelessWidget {
           ),
           bottom: TabBar(
             indicatorColor: theme.primaryColor,
-            labelColor: theme.primaryColor,
+            labelColor: Colors.white70,
             unselectedLabelColor: isDark ? Colors.white70 : Colors.black54,
             tabs: const [
               Tab(text: 'Morning'),
