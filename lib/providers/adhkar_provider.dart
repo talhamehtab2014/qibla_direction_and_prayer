@@ -13,12 +13,18 @@ class AdhkarProvider extends ChangeNotifier {
   List<Adhkar> get eveningAdhkar => _eveningAdhkar;
   bool get isLoading => _isLoading;
 
-  void loadAdhkar() {
+  Future<void> loadAdhkar() async {
     _isLoading = true;
     notifyListeners();
 
-    _morningAdhkar = _adhkarService.getMorningAdhkar();
-    _eveningAdhkar = _adhkarService.getEveningAdhkar();
+    try {
+      _morningAdhkar = await _adhkarService.getMorningAdhkar();
+      _eveningAdhkar = await _adhkarService.getEveningAdhkar();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading adhkar: $e');
+      }
+    }
 
     _isLoading = false;
     notifyListeners();

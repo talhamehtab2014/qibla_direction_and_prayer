@@ -70,7 +70,7 @@ class AdhkarDetailsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  adhkar.text,
+                  adhkar.arabic,
                   textAlign: TextAlign.right,
                   style: GoogleFonts.amiri(
                     fontSize: 22.sp,
