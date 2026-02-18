@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Qibla & Prayer Times',
+          'Iman360',
           style: GoogleFonts.outfit(
             fontWeight: FontWeight.bold,
             color: isDark ? Colors.white : Colors.black87,
@@ -88,7 +88,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        'Welcome to Qibla & Prayer',
+                        'Welcome to Iman360',
                         style: GoogleFonts.outfit(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
