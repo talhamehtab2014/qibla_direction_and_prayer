@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "1073513696095",
-    "project_id": "qibladirectionandprayer",
-    "storage_bucket": "qibladirectionandprayer.firebasestorage.app"
+    "project_number": "190108415282",
+    "project_id": "qibla-direction-app-b9e9b",
+    "storage_bucket": "qibla-direction-app-b9e9b.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1073513696095:android:0daad16596b7a3851084ea",
+        "mobilesdk_app_id": "1:190108415282:android:6986df9eb01091c79c932b",
         "android_client_info": {
-          "package_name": "com.example.qibla_direction"
+          "package_name": "com.tmsolutions.qibla_direction"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAdJqIefq4wuzItw32oZ-bn3zmlSNpnPNE"
+          "current_key": "AIzaSyC3eFvLAz_eIFV4rdT2mdd_HjahChOg-t8"
         }
       ],
       "services": {

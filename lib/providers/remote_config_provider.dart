@@ -15,6 +15,12 @@ class RemoteConfigProvider with ChangeNotifier {
 
   Future<void> initialize() async {
     await _service.initialize();
+
+    // Listen for real-time updates
+    _service.onConfigUpdated.listen((_) {
+      notifyListeners();
+    });
+
     notifyListeners();
   }
 }

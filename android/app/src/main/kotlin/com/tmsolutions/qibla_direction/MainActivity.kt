@@ -1,4 +1,4 @@
-package com.example.qibla_direction
+package com.tmsolutions.qibla_direction
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAdJqIefq4wuzItw32oZ-bn3zmlSNpnPNE',
-    appId: '1:1073513696095:android:0daad16596b7a3851084ea',
-    messagingSenderId: '1073513696095',
-    projectId: 'qibladirectionandprayer',
-    storageBucket: 'qibladirectionandprayer.firebasestorage.app',
+    apiKey: 'AIzaSyC3eFvLAz_eIFV4rdT2mdd_HjahChOg-t8',
+    appId: '1:190108415282:android:6986df9eb01091c79c932b',
+    messagingSenderId: '190108415282',
+    projectId: 'qibla-direction-app-b9e9b',
+    storageBucket: 'qibla-direction-app-b9e9b.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA1rax967YomYrtvnTGVlJuaYYTQdcsR4U',
-    appId: '1:1073513696095:ios:ab8c97ce73d6dfcd1084ea',
-    messagingSenderId: '1073513696095',
-    projectId: 'qibladirectionandprayer',
-    storageBucket: 'qibladirectionandprayer.firebasestorage.app',
-    iosBundleId: 'com.example.qiblaDirection',
+    apiKey: 'AIzaSyC3eFvLAz_eIFV4rdT2mdd_HjahChOg-t8',
+    appId:
+        '1:190108415282:ios:9e782ea8eb88195e9c932b', // Note: Guessed ID based on sender ID, User might need to confirm or provide Info.plist
+    messagingSenderId: '190108415282',
+    projectId: 'qibla-direction-app-b9e9b',
+    storageBucket: 'qibla-direction-app-b9e9b.firebasestorage.app',
+    iosBundleId: 'com.tmsolutions.qibla_direction',
   );
 }

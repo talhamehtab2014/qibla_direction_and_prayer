@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 
@@ -12,6 +13,9 @@ class RemoteConfigService {
   static const String _showDailyAdhkarKey = 'showDailyAdhkar';
   static const String _isShowAdsKey = 'isShowAds';
   static const String _showRamadanTimingKey = 'showRamadanTiming';
+
+  final _updateController = StreamController<void>.broadcast();
+  Stream<void> get onConfigUpdated => _updateController.stream;
 
   Future<void> initialize() async {
     try {
@@ -43,6 +47,17 @@ class RemoteConfigService {
       }
 
       await _fetchAndActivate();
+
+      // Listen for real-time updates
+      _remoteConfig.onConfigUpdated.listen((event) async {
+        await _remoteConfig.activate();
+        _updateController.add(null);
+        if (kDebugMode) {
+          print(
+            'RemoteConfig: Real-time update activated for keys: ${event.updatedKeys}',
+          );
+        }
+      });
 
       if (kDebugMode) {
         print('RemoteConfig: Fetch complete.');
