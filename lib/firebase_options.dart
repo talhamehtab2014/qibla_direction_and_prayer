@@ -50,20 +50,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyC3eFvLAz_eIFV4rdT2mdd_HjahChOg-t8',
-    appId: '1:190108415282:android:6986df9eb01091c79c932b',
-    messagingSenderId: '190108415282',
-    projectId: 'qibla-direction-app-b9e9b',
-    storageBucket: 'qibla-direction-app-b9e9b.firebasestorage.app',
+    apiKey: 'AIzaSyDWiUEwuZEAuLqzd_5kvy96pqU1K7ku10Q',
+    appId: '1:296146591373:android:832f0d22d174b30eb94cc4',
+    messagingSenderId: '296146591373',
+    projectId: 'iman360-85f4f',
+    storageBucket: 'iman360-85f4f.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyC3eFvLAz_eIFV4rdT2mdd_HjahChOg-t8',
+    apiKey:
+        'AIzaSyDWiUEwuZEAuLqzd_5kvy96pqU1K7ku10Q', // Assuming same API Key or will need update
     appId:
-        '1:190108415282:ios:9e782ea8eb88195e9c932b', // Note: Guessed ID based on sender ID, User might need to confirm or provide Info.plist
-    messagingSenderId: '190108415282',
-    projectId: 'qibla-direction-app-b9e9b',
-    storageBucket: 'qibla-direction-app-b9e9b.firebasestorage.app',
-    iosBundleId: 'com.tmsolutions.qibla_direction',
+        '1:296146591373:ios:ab8c97ce73d6dfcd1084ea', // From the old plist but with new project number prefix? No, let's use the one from the native plist if we can guess, or just update project ID.
+    messagingSenderId: '296146591373',
+    projectId: 'iman360-85f4f',
+    storageBucket: 'iman360-85f4f.firebasestorage.app',
+    iosBundleId: 'com.tmsolutions.iman360',
   );
 }

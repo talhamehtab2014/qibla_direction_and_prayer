@@ -21,6 +21,8 @@ Future<void> main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+  } else {
+    Firebase.app(); // Ensure it's accessible
   }
   await MobileAds.instance.initialize();
 

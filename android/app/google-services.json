@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "190108415282",
-    "project_id": "qibla-direction-app-b9e9b",
-    "storage_bucket": "qibla-direction-app-b9e9b.firebasestorage.app"
+    "project_number": "296146591373",
+    "project_id": "iman360-85f4f",
+    "storage_bucket": "iman360-85f4f.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:190108415282:android:6986df9eb01091c79c932b",
+        "mobilesdk_app_id": "1:296146591373:android:832f0d22d174b30eb94cc4",
         "android_client_info": {
-          "package_name": "com.tmsolutions.qibla_direction"
+          "package_name": "com.tmsolutions.iman360"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC3eFvLAz_eIFV4rdT2mdd_HjahChOg-t8"
+          "current_key": "AIzaSyDWiUEwuZEAuLqzd_5kvy96pqU1K7ku10Q"
         }
       ],
       "services": {

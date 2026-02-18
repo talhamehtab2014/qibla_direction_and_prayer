@@ -6,7 +6,7 @@
     <!-- Internet permissions for Daily Hadith -->
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="Qibla &amp; Prayer Times"
+        android:label="Iman360"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
