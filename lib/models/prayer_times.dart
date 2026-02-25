@@ -44,6 +44,29 @@ class PrayerTimes {
     );
   }
 
+  // Parse from a single day entry in the hijriCalendar API response.
+  // Time strings from that API carry a timezone suffix like " (+03)" which we strip.
+  factory PrayerTimes.fromCalendarDayJson(Map<String, dynamic> json) {
+    final timings = json['timings'];
+    final date = json['date'];
+
+    String clean(String t) => t.split(' ')[0]; // strip " (+03)"
+
+    return PrayerTimes(
+      fajr: clean(timings['Fajr'] ?? ''),
+      sunrise: clean(timings['Sunrise'] ?? ''),
+      dhuhr: clean(timings['Dhuhr'] ?? ''),
+      asr: clean(timings['Asr'] ?? ''),
+      sunset: clean(timings['Sunset'] ?? ''),
+      maghrib: clean(timings['Maghrib'] ?? ''),
+      isha: clean(timings['Isha'] ?? ''),
+      imsak: clean(timings['Imsak'] ?? ''),
+      midnight: clean(timings['Midnight'] ?? ''),
+      hijriDate: HijriDate.fromJson(date['hijri']),
+      gregorianDate: GregorianDate.fromJson(date['gregorian']),
+    );
+  }
+
   // Check if today is Friday
   bool get _isFriday => DateTime.now().weekday == DateTime.friday;
 

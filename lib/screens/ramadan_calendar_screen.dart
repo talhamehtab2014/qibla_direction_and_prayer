@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:qibla_direction/providers/prayer_provider.dart';
 import 'package:qibla_direction/providers/ramadan_provider.dart';
 import 'package:intl/intl.dart';
 
@@ -16,10 +17,10 @@ class RamadanCalendarScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Ramadan Calendar 1447',
+          'Ramadan Calendar',
           style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: isDark ? theme.primaryColorDark : theme.primaryColor,
         elevation: 0,
         centerTitle: true,
       ),
@@ -38,9 +39,22 @@ class RamadanCalendarScreen extends StatelessWidget {
             itemCount: provider.ramadanDays.length,
             itemBuilder: (context, index) {
               final day = provider.ramadanDays[index];
+              final adj = context.read<PrayerProvider>().hijriAdjustment;
+              final formatter = DateFormat('dd MMM yyyy');
+
+              // Parse the Gregorian date from the API and shift it by adj days
+              DateTime? parsedDate;
+              try {
+                parsedDate = formatter.parse(day.date);
+              } catch (_) {}
+              final shiftedDate = parsedDate?.add(Duration(days: adj));
+              final displayDate = shiftedDate != null
+                  ? formatter.format(shiftedDate)
+                  : day.date;
+
               final now = DateTime.now();
-              final todayFormatter = DateFormat('d MMM yyyy');
-              final isToday = day.date == todayFormatter.format(now);
+              final todayStr = formatter.format(now);
+              final isToday = displayDate == todayStr;
 
               return Card(
                 margin: EdgeInsets.only(bottom: 12.h),
@@ -57,7 +71,7 @@ class RamadanCalendarScreen extends StatelessWidget {
                   ),
                 ),
                 color: isToday
-                    ? theme.primaryColor.withOpacity(0.1)
+                    ? Colors.white
                     : (isDark ? Colors.white.withOpacity(0.05) : Colors.white),
                 child: Padding(
                   padding: EdgeInsets.all(16.r),
@@ -80,7 +94,7 @@ class RamadanCalendarScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '${day.day}',
+                              day.day,
                               style: GoogleFonts.outfit(
                                 color: Colors.white,
                                 fontSize: 18.sp,
@@ -96,7 +110,7 @@ class RamadanCalendarScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              day.date,
+                              displayDate,
                               style: GoogleFonts.outfit(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
@@ -144,21 +158,11 @@ class RamadanCalendarScreen extends StatelessWidget {
                       ),
                       if (isToday)
                         Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12.w,
-                            vertical: 4.h,
-                          ),
+                          width: 10.h,
+                          height: 10.h,
                           decoration: BoxDecoration(
                             color: theme.primaryColor,
-                            borderRadius: BorderRadius.circular(20.r),
-                          ),
-                          child: Text(
-                            'TODAY',
-                            style: GoogleFonts.outfit(
-                              color: Colors.white,
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            shape: BoxShape.circle,
                           ),
                         ),
                     ],

@@ -17,6 +17,8 @@ class _PrayerSettingsBottomSheetState extends State<PrayerSettingsBottomSheet> {
   late int _tempSchool;
   int? _tempMidnightMode;
   int? _tempLatitudeAdj;
+  int _tempHijriAdj = 0;
+  String _tempCalendarMethod = 'HJCoSA';
 
   final List<Map<String, dynamic>> _methods = [
     {'id': 0, 'name': 'Shia Ithna-Ashari, Leva Institute, Qum'},
@@ -62,6 +64,21 @@ class _PrayerSettingsBottomSheetState extends State<PrayerSettingsBottomSheet> {
     {'id': 3, 'name': 'Angle Based'},
   ];
 
+  final List<Map<String, dynamic>> _hijriAdjs = [
+    {'id': -2, 'name': '-2 Days'},
+    {'id': -1, 'name': '-1 Day'},
+    {'id': 0, 'name': 'None (0)'},
+    {'id': 1, 'name': '+1 Day'},
+    {'id': 2, 'name': '+2 Days'},
+  ];
+
+  final List<Map<String, String>> _calendarMethods = [
+    {'id': 'HJCoSA', 'name': 'HJCoSA - High Judicial Council of Saudi Arabia'},
+    {'id': 'UAQ', 'name': 'UAQ - Umm al-Qura'},
+    {'id': 'DIYANET', 'name': 'DIYANET - Diyanet İşleri Başkanlığı'},
+    {'id': 'MATHEMATICAL', 'name': 'MATHEMATICAL'},
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -70,6 +87,8 @@ class _PrayerSettingsBottomSheetState extends State<PrayerSettingsBottomSheet> {
     _tempSchool = provider.selectedSchool;
     _tempMidnightMode = provider.midnightMode;
     _tempLatitudeAdj = provider.latitudeAdjustmentMethod;
+    _tempHijriAdj = provider.hijriAdjustment;
+    _tempCalendarMethod = provider.calendarMethod;
   }
 
   @override
@@ -305,6 +324,105 @@ class _PrayerSettingsBottomSheetState extends State<PrayerSettingsBottomSheet> {
                 );
               }).toList(),
             ),
+            SizedBox(height: 24.h),
+            Text(
+              'Calendar Method',
+              style: GoogleFonts.outfit(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(15.r),
+                border: Border.all(color: Colors.grey.withOpacity(0.1)),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: _tempCalendarMethod,
+                  isExpanded: true,
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      setState(() => _tempCalendarMethod = newValue);
+                    }
+                  },
+                  items: _calendarMethods.map((m) {
+                    return DropdownMenuItem<String>(
+                      value: m['id'],
+                      child: Text(
+                        m['name']!,
+                        style: GoogleFonts.outfit(fontSize: 13.sp),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Row(
+              children: [
+                Text(
+                  'Hijri Date Adjustment',
+                  style: GoogleFonts.outfit(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Tooltip(
+                  message:
+                      'Day adjustment is only applied when Calendar Method is set to MATHEMATICAL.',
+                  triggerMode: TooltipTriggerMode.tap,
+                  showDuration: const Duration(seconds: 5),
+                  child: Icon(
+                    Icons.info_outline,
+                    size: 18.r,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 12.h),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(15.r),
+                border: Border.all(color: Colors.grey.withOpacity(0.1)),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<int>(
+                  value: _tempHijriAdj,
+                  isExpanded: true,
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onChanged: (int? newValue) {
+                    if (newValue != null) {
+                      setState(() => _tempHijriAdj = newValue);
+                    }
+                  },
+                  items: _hijriAdjs.map((adj) {
+                    return DropdownMenuItem<int>(
+                      value: adj['id'],
+                      child: Text(
+                        adj['name'],
+                        style: GoogleFonts.outfit(fontSize: 14.sp),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
             SizedBox(height: 32.h),
             SizedBox(
               width: double.infinity,
@@ -315,6 +433,8 @@ class _PrayerSettingsBottomSheetState extends State<PrayerSettingsBottomSheet> {
                     _tempSchool,
                     midnightMode: _tempMidnightMode,
                     latitudeAdj: _tempLatitudeAdj,
+                    hijriAdj: _tempHijriAdj,
+                    calendarMethod: _tempCalendarMethod,
                   );
                   Navigator.pop(context);
                 },

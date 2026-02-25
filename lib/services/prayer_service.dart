@@ -12,6 +12,8 @@ class PrayerService {
     int school = 0,
     int? midnightMode,
     int? latitudeAdjustmentMethod,
+    int hijriAdjustment = 0,
+    String calendarMethod = 'HJCoSA',
     DateTime? date,
   }) async {
     final dateStr = date != null
@@ -21,7 +23,9 @@ class PrayerService {
     final url = Uri.parse(
       '$_baseUrl/$dateStr?latitude=$latitude&longitude=$longitude&method=$method&school=$school'
       '${midnightMode != null ? '&midnightMode=$midnightMode' : ''}'
-      '${latitudeAdjustmentMethod != null ? '&latitudeAdjustmentMethod=$latitudeAdjustmentMethod' : ''}',
+      '${latitudeAdjustmentMethod != null ? '&latitudeAdjustmentMethod=$latitudeAdjustmentMethod' : ''}'
+      '&calendarMethod=$calendarMethod'
+      '${calendarMethod == 'MATHEMATICAL' && hijriAdjustment != 0 ? '&adjustment=$hijriAdjustment' : ''}',
     );
 
     try {

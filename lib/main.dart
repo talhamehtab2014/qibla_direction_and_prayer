@@ -11,6 +11,7 @@ import 'package:qibla_direction/providers/adhkar_provider.dart';
 import 'package:qibla_direction/providers/remote_config_provider.dart';
 import 'package:qibla_direction/providers/ramadan_timing_provider.dart';
 import 'package:qibla_direction/screens/splash_screen.dart';
+import 'package:qibla_direction/services/notification_service.dart';
 import 'package:qibla_direction/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -24,6 +25,14 @@ Future<void> main() async {
   } else {
     Firebase.app(); // Ensure it's accessible
   }
+
+  // Initialize Notification Service
+  try {
+    await NotificationService().initialize();
+  } catch (e) {
+    debugPrint("Failed to initialize NotificationService: $e");
+  }
+
   await MobileAds.instance.initialize();
 
   runApp(
@@ -31,7 +40,7 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => QiblaProvider()),
-        ChangeNotifierProvider(create: (_) => PrayerProvider()),
+        ChangeNotifierProvider(create: (_) => PrayerProvider()..initialize()),
         ChangeNotifierProvider(create: (_) => HadithProvider()..fetchHadiths()),
         ChangeNotifierProvider(
           create: (_) => RamadanProvider()..fetchRamadanCalendar(),

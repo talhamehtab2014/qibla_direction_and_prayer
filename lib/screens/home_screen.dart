@@ -12,8 +12,9 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:qibla_direction/widgets/hadith_swipe_card.dart';
 import 'package:qibla_direction/screens/ramadan_calendar_screen.dart';
 import 'package:qibla_direction/screens/adhkar_details_screen.dart';
+import 'package:intl/intl.dart';
 import 'package:qibla_direction/providers/remote_config_provider.dart';
-import 'package:qibla_direction/providers/ramadan_timing_provider.dart';
+import 'package:qibla_direction/providers/prayer_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -150,9 +151,9 @@ class HomeScreen extends StatelessWidget {
                             return const SizedBox.shrink();
                           }
 
-                          return Consumer<RamadanTimingProvider>(
-                            builder: (context, ramadanTimingProvider, child) {
-                              if (ramadanTimingProvider.isLoading) {
+                          return Consumer<PrayerProvider>(
+                            builder: (context, prayerProvider, child) {
+                              if (prayerProvider.isLoading) {
                                 return Container(
                                   height: 100.h,
                                   width: double.infinity,
@@ -174,9 +175,34 @@ class HomeScreen extends StatelessWidget {
                                 );
                               }
 
-                              final timing =
-                                  ramadanTimingProvider.currentTiming;
-                              if (timing != null) {
+                              final prayerTimes = prayerProvider.prayerTimes;
+                              if (prayerTimes != null) {
+                                final hijri = prayerTimes.hijriDate;
+                                final now = DateTime.now();
+                                final todayStr = DateFormat(
+                                  'd MMM yyyy',
+                                ).format(now);
+
+                                String formatAMPM(String raw) {
+                                  try {
+                                    final cleaned = raw.split(' ')[0];
+                                    final parts = cleaned.split(':');
+                                    final dt = DateTime(
+                                      2000,
+                                      1,
+                                      1,
+                                      int.parse(parts[0]),
+                                      int.parse(parts[1]),
+                                    );
+                                    return DateFormat('hh:mm a').format(dt);
+                                  } catch (e) {
+                                    return raw.split(' ')[0];
+                                  }
+                                }
+
+                                final sehri = formatAMPM(prayerTimes.fajr);
+                                final iftar = formatAMPM(prayerTimes.maghrib);
+
                                 return Container(
                                   width: double.infinity,
                                   padding: EdgeInsets.all(14.r),
@@ -216,7 +242,7 @@ class HomeScreen extends StatelessWidget {
                                               ),
                                               SizedBox(width: 6.w),
                                               Text(
-                                                'Ramadan Day ${timing.day}',
+                                                'Ramadan Day ${hijri.day}',
                                                 style: GoogleFonts.outfit(
                                                   fontSize: 14.sp,
                                                   fontWeight: FontWeight.bold,
@@ -226,7 +252,7 @@ class HomeScreen extends StatelessWidget {
                                             ],
                                           ),
                                           Text(
-                                            timing.date,
+                                            todayStr,
                                             style: GoogleFonts.outfit(
                                               fontSize: 11.sp,
                                               color: Colors.white.withOpacity(
@@ -268,7 +294,7 @@ class HomeScreen extends StatelessWidget {
                                                   ),
                                                   SizedBox(height: 2.h),
                                                   Text(
-                                                    timing.sehri,
+                                                    sehri,
                                                     style: GoogleFonts.outfit(
                                                       fontSize: 16.sp,
                                                       fontWeight:
@@ -309,7 +335,7 @@ class HomeScreen extends StatelessWidget {
                                                   ),
                                                   SizedBox(height: 2.h),
                                                   Text(
-                                                    timing.iftar,
+                                                    iftar,
                                                     style: GoogleFonts.outfit(
                                                       fontSize: 16.sp,
                                                       fontWeight:

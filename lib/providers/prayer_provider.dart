@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:qibla_direction/models/prayer_times.dart';
 import 'package:qibla_direction/services/location_service.dart';
-import 'package:qibla_direction/services/prayer_service.dart';
+import 'package:qibla_direction/services/ramadan_service.dart';
 
 class PrayerProvider extends ChangeNotifier {
-  final PrayerService _prayerService = PrayerService();
+  final RamadanService _ramadanService = RamadanService();
   final LocationService _locationService = LocationService();
 
   PrayerTimes? _prayerTimes;
@@ -26,6 +26,9 @@ class PrayerProvider extends ChangeNotifier {
   int _selectedSchool = 0; // Default: Shafi (Standard)
   int? _midnightMode;
   int? _latitudeAdjustmentMethod;
+  int _hijriAdjustment = 0;
+  String _calendarMethod =
+      'HJCoSA'; // Default: High Judicial Council of Saudi Arabia
 
   PrayerTimes? get prayerTimes => _prayerTimes;
   bool get isLoading => _isLoading;
@@ -40,6 +43,8 @@ class PrayerProvider extends ChangeNotifier {
   int get selectedSchool => _selectedSchool;
   int? get midnightMode => _midnightMode;
   int? get latitudeAdjustmentMethod => _latitudeAdjustmentMethod;
+  int get hijriAdjustment => _hijriAdjustment;
+  String get calendarMethod => _calendarMethod;
 
   // Makkah coordinates for fallback
   static const double _makkahLat = 21.4225;
@@ -70,13 +75,13 @@ class PrayerProvider extends ChangeNotifier {
       _latitude = lat;
       _longitude = lng;
 
-      _prayerTimes = await _prayerService.fetchPrayerTimes(
-        latitude: lat,
-        longitude: lng,
+      _prayerTimes = await _ramadanService.fetchTodayTimings(
         method: _selectedMethod,
         school: _selectedSchool,
         midnightMode: _midnightMode,
         latitudeAdjustmentMethod: _latitudeAdjustmentMethod,
+        adj: _hijriAdjustment,
+        calendarMethod: _calendarMethod,
       );
 
       _updateUpcomingPrayer();
@@ -101,6 +106,8 @@ class PrayerProvider extends ChangeNotifier {
     _latitudeAdjustmentMethod = prefs.containsKey('latitude_adj')
         ? prefs.getInt('latitude_adj')
         : null;
+    _hijriAdjustment = prefs.getInt('hijri_adj') ?? 0;
+    _calendarMethod = prefs.getString('calendar_method') ?? 'HJCoSA';
   }
 
   Future<void> _saveSettings() async {
@@ -117,6 +124,8 @@ class PrayerProvider extends ChangeNotifier {
     } else {
       await prefs.remove('latitude_adj');
     }
+    await prefs.setInt('hijri_adj', _hijriAdjustment);
+    await prefs.setString('calendar_method', _calendarMethod);
   }
 
   Future<void> updateSettings(
@@ -124,13 +133,17 @@ class PrayerProvider extends ChangeNotifier {
     int school, {
     int? midnightMode,
     int? latitudeAdj,
+    int? hijriAdj,
+    String? calendarMethod,
   }) async {
     _selectedMethod = method;
     _selectedSchool = school;
     _midnightMode = midnightMode;
     _latitudeAdjustmentMethod = latitudeAdj;
+    if (hijriAdj != null) _hijriAdjustment = hijriAdj;
+    if (calendarMethod != null) _calendarMethod = calendarMethod;
     await _saveSettings();
-    await initialize(); // Refresh data with new settings
+    await initialize();
   }
 
   void _startTimer() {
