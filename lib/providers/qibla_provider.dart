@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:qibla_direction/models/location_data.dart';
+import 'package:qibla_direction/models/compass_theme.dart';
 import 'package:qibla_direction/services/compass_service.dart';
 import 'package:qibla_direction/services/location_service.dart';
 
@@ -15,6 +17,7 @@ class QiblaProvider extends ChangeNotifier {
   double? _qiblaDirection;
   double? _accuracy;
   bool _needsCalibration = false;
+  CompassDesign _selectedDesign = CompassDesign.islamic;
 
   bool _isLoading = false;
   bool _hasPermission = false;
@@ -37,6 +40,13 @@ class QiblaProvider extends ChangeNotifier {
   bool get isCompassAvailable => _isCompassAvailable;
   bool get isPermanentlyDenied => _isPermanentlyDenied;
   String? get errorMessage => _errorMessage;
+  CompassDesign get selectedDesign => _selectedDesign;
+
+  /// Set selected compass design
+  void setSelectedDesign(CompassDesign design) {
+    _selectedDesign = design;
+    notifyListeners();
+  }
 
   /// Initialize compass and location
   Future<void> initialize() async {

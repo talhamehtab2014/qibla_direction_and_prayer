@@ -4,6 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:qibla_direction/providers/qibla_provider.dart';
 import 'package:qibla_direction/providers/theme_provider.dart';
+import 'package:qibla_direction/models/compass_theme.dart';
 import 'package:qibla_direction/widgets/compass_widget.dart';
 import 'package:qibla_direction/widgets/location_info_card.dart';
 import 'package:qibla_direction/widgets/calibration_guide_dialog.dart';
@@ -287,8 +288,13 @@ class _QiblaCompassScreenState extends State<QiblaCompassScreen>
                     child: CompassWidget(
                       compassHeading: qiblaProvider.compassHeading,
                       qiblaDirection: qiblaProvider.qiblaDirection,
+                      design: qiblaProvider.selectedDesign,
                     ),
                   ),
+                  SizedBox(height: 24.h),
+
+                  // Design Selector
+                  _buildDesignSelector(context, qiblaProvider),
                   SizedBox(height: 24.h),
 
                   // Qibla status indicator
@@ -319,6 +325,120 @@ class _QiblaCompassScreenState extends State<QiblaCompassScreen>
         },
       ),
     );
+  }
+
+  Widget _buildDesignSelector(
+    BuildContext context,
+    QiblaProvider qiblaProvider,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4.w),
+          child: Text(
+            'Choose Compass Design',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+          ),
+        ),
+        SizedBox(height: 12.h),
+        SizedBox(
+          height: 80.h,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: CompassThemeData.themes.length,
+            itemBuilder: (context, index) {
+              final theme = CompassThemeData.themes[index];
+              final isSelected = qiblaProvider.selectedDesign == theme.design;
+
+              return GestureDetector(
+                onTap: () => qiblaProvider.setSelectedDesign(theme.design),
+                child: Container(
+                  width: 100.w,
+                  margin: EdgeInsets.only(right: 12.w),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                        : Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: isSelected
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                      width: isSelected ? 2.w : 1.w,
+                    ),
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                              blurRadius: 8.r,
+                              offset: const Offset(0, 4),
+                            )
+                          ]
+                        : null,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Miniature preview icon/shape
+                      Container(
+                        width: 32.r,
+                        height: 32.r,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.grey,
+                            width: 1.r,
+                          ),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            _getIconForDesign(theme.design),
+                            size: 16.r,
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.grey,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        theme.name,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  IconData _getIconForDesign(CompassDesign design) {
+    switch (design) {
+      case CompassDesign.classic:
+        return Icons.explore_outlined;
+      case CompassDesign.islamic:
+        return Icons.mosque_outlined;
+      case CompassDesign.glassmorphism:
+        return Icons.blur_on_rounded;
+      case CompassDesign.mechanical:
+        return Icons.settings_input_component_sharp;
+    }
   }
 
   Widget _buildQiblaStatusIndicator(

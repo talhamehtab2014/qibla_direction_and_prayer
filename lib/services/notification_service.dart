@@ -5,6 +5,7 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:flutter/foundation.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -97,7 +98,6 @@ class NotificationService {
               AndroidFlutterLocalNotificationsPlugin
             >();
     await androidImplementation?.requestNotificationsPermission();
-    await androidImplementation?.requestExactAlarmsPermission();
   }
 
   Future<void> _showLocalNotification(String? title, String? body) async {
@@ -176,6 +176,12 @@ class NotificationService {
     required String body,
     required DateTime scheduledDate,
   }) async {
+    // Check for exact alarm permission on Android 13+
+    bool canScheduleExact = true;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      canScheduleExact = await Permission.scheduleExactAlarm.isGranted;
+    }
+
     await _localNotificationsPlugin.zonedSchedule(
       id: id,
       title: title,
@@ -191,7 +197,9 @@ class NotificationService {
         ),
         iOS: DarwinNotificationDetails(),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: canScheduleExact
+          ? AndroidScheduleMode.exactAllowWhileIdle
+          : AndroidScheduleMode.inexactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
   }

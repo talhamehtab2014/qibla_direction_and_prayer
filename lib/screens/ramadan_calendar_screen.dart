@@ -2,12 +2,74 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:qibla_direction/models/ramadan_day.dart';
 import 'package:qibla_direction/providers/prayer_provider.dart';
 import 'package:qibla_direction/providers/ramadan_provider.dart';
 import 'package:intl/intl.dart';
 
-class RamadanCalendarScreen extends StatelessWidget {
+class RamadanCalendarScreen extends StatefulWidget {
   const RamadanCalendarScreen({super.key});
+
+  @override
+  State<RamadanCalendarScreen> createState() => _RamadanCalendarScreenState();
+}
+
+class _RamadanCalendarScreenState extends State<RamadanCalendarScreen> {
+  final ScrollController _scrollController = ScrollController();
+  bool _hasScrolled = false;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToToday(List<RamadanDay> days, int adj) {
+    if (_hasScrolled || days.isEmpty) return;
+
+    final formatter = DateFormat('dd MMM yyyy');
+    final now = DateTime.now();
+    final todayStr = formatter.format(now);
+
+    int todayIndex = -1;
+
+    for (int i = 0; i < days.length; i++) {
+      final day = days[i];
+      DateTime? parsedDate;
+      try {
+        parsedDate = formatter.parse(day.date);
+      } catch (_) {}
+      final shiftedDate = parsedDate?.add(Duration(days: adj));
+      final displayDate = shiftedDate != null ? formatter.format(shiftedDate) : day.date;
+
+      if (displayDate == todayStr) {
+        todayIndex = i;
+        break;
+      }
+    }
+
+    if (todayIndex != -1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        
+        // Dynamic item height estimation:
+        // Card padding (16*2) + Margin (12) + Content (approx 50) = ~95.h
+        final double itemHeight = 90.h; 
+        final double scrollOffset = todayIndex * itemHeight;
+        
+        // Ensure we don't scroll past max extent
+        final double maxScroll = _scrollController.position.maxScrollExtent;
+        final double targetOffset = scrollOffset > maxScroll ? maxScroll : scrollOffset;
+
+        _scrollController.animateTo(
+          targetOffset,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOutCubic,
+        );
+        _hasScrolled = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +86,28 @@ class RamadanCalendarScreen extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
       ),
-      body: Consumer<RamadanProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading) {
+      body: Consumer2<RamadanProvider, PrayerProvider>(
+        builder: (context, ramadanProvider, prayerProvider, child) {
+          if (ramadanProvider.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (provider.ramadanDays.isEmpty) {
+          if (ramadanProvider.ramadanDays.isEmpty) {
             return const Center(child: Text('No data available'));
           }
 
+          // Trigger scroll after build if data is ready
+          if (!_hasScrolled) {
+            _scrollToToday(ramadanProvider.ramadanDays, prayerProvider.hijriAdjustment);
+          }
+
           return ListView.builder(
+            controller: _scrollController,
             padding: EdgeInsets.all(16.r),
-            itemCount: provider.ramadanDays.length,
+            itemCount: ramadanProvider.ramadanDays.length,
             itemBuilder: (context, index) {
-              final day = provider.ramadanDays[index];
-              final adj = context.read<PrayerProvider>().hijriAdjustment;
+              final day = ramadanProvider.ramadanDays[index];
+              final adj = prayerProvider.hijriAdjustment;
               final formatter = DateFormat('dd MMM yyyy');
 
               // Parse the Gregorian date from the API and shift it by adj days
@@ -71,7 +139,7 @@ class RamadanCalendarScreen extends StatelessWidget {
                   ),
                 ),
                 color: isToday
-                    ? Colors.white
+                    ? Colors.white.withOpacity(0.3)
                     : (isDark ? Colors.white.withOpacity(0.05) : Colors.white),
                 child: Padding(
                   padding: EdgeInsets.all(16.r),
