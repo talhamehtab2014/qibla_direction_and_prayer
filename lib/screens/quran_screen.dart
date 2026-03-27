@@ -89,12 +89,18 @@ class _QuranScreenState extends State<QuranScreen> {
                     }
 
                     return ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.h,
+                      ),
                       itemCount: provider.filteredSurahs.length,
                       itemBuilder: (context, index) {
                         final surah = provider.filteredSurahs[index];
-                        final isDownloaded = provider.downloadedSurahs.contains(surah.number);
-                        final isDownloading = provider.downloadingSurahs.contains(surah.number);
+                        final isDownloaded = provider.downloadedSurahs.contains(
+                          surah.number,
+                        );
+                        final isDownloading = provider.downloadingSurahs
+                            .contains(surah.number);
 
                         return Container(
                           margin: EdgeInsets.only(bottom: 12.h),
@@ -128,11 +134,15 @@ class _QuranScreenState extends State<QuranScreen> {
                                 padding: EdgeInsets.all(16.w),
                                 child: Row(
                                   children: [
-                                    _buildSurahNumberBadge(context, surah.number),
+                                    _buildSurahNumberBadge(
+                                      context,
+                                      surah.number,
+                                    ),
                                     SizedBox(width: 16.w),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             surah.englishName,
@@ -153,18 +163,21 @@ class _QuranScreenState extends State<QuranScreen> {
                                       ),
                                     ),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Text(
                                           surah.name,
                                           style: GoogleFonts.amiri(
                                             fontSize: 22.sp,
                                             fontWeight: FontWeight.bold,
-                                            color: Theme.of(context).primaryColor,
+                                            color: Theme.of(
+                                              context,
+                                            ).primaryColor,
                                           ),
                                         ),
                                         SizedBox(height: 4.h),
-                                        _buildDownloadButton(context, provider, surah.number, isDownloaded, isDownloading),
+                                        //_buildDownloadButton(context, provider, surah.number, isDownloaded, isDownloading),
                                       ],
                                     ),
                                   ],
@@ -192,17 +205,17 @@ class _QuranScreenState extends State<QuranScreen> {
         final surahName = lastRead?['surahName'] ?? 'Al-Fatihah';
         final ayahNumber = lastRead?['ayahNumber'] ?? 1;
         final surahNumber = lastRead?['surahNumber'] ?? 1;
-        final subtitle = lastRead != null ? 'Ayah No: $ayahNumber' : 'Start Reading';
+        final subtitle = lastRead != null
+            ? 'Ayah No: $ayahNumber'
+            : 'Start Reading';
 
         return GestureDetector(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SurahScreen(
-                  surahNumber: surahNumber,
-                  surahName: surahName,
-                ),
+                builder: (context) =>
+                    SurahScreen(surahNumber: surahNumber, surahName: surahName),
               ),
             );
           },
@@ -235,7 +248,11 @@ class _QuranScreenState extends State<QuranScreen> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.menu_book, color: Colors.white, size: 20.sp),
+                          Icon(
+                            Icons.menu_book,
+                            color: Colors.white,
+                            size: 20.sp,
+                          ),
                           SizedBox(width: 8.w),
                           Text(
                             'Last Read',
@@ -302,7 +319,10 @@ class _QuranScreenState extends State<QuranScreen> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.r),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
+            borderSide: BorderSide(
+              color: Theme.of(context).primaryColor,
+              width: 1.5,
+            ),
           ),
           contentPadding: EdgeInsets.symmetric(
             horizontal: 16.w,
@@ -352,7 +372,9 @@ class _QuranScreenState extends State<QuranScreen> {
           padding: EdgeInsets.all(4.w),
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor,
+            ),
           ),
         ),
       );
@@ -365,11 +387,7 @@ class _QuranScreenState extends State<QuranScreen> {
           color: Colors.green.withOpacity(0.1),
           shape: BoxShape.circle,
         ),
-        child: Icon(
-          Icons.download_done,
-          color: Colors.green,
-          size: 16.sp,
-        ),
+        child: Icon(Icons.download_done, color: Colors.green, size: 16.sp),
       );
     }
 
@@ -391,4 +409,3 @@ class _QuranScreenState extends State<QuranScreen> {
     );
   }
 }
-

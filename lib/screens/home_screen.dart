@@ -371,60 +371,6 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 16.h),
-
-                      Consumer<RemoteConfigProvider>(
-                        builder: (context, remoteConfig, child) {
-                          return Row(
-                            children: [
-                              Expanded(
-                                child: _buildFeatureCard(
-                                  context,
-                                  title: 'Qibla Compass',
-                                  subtitle: 'Accurate Direction',
-                                  icon: Icons.explore_rounded,
-                                  color: const Color(0xFF2E7D32),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ChangeNotifierProvider(
-                                              create: (_) => QiblaProvider(),
-                                              child: const QiblaCompassScreen(),
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              if (remoteConfig.showPrayersTime) ...[
-                                SizedBox(width: 16.w),
-                                Expanded(
-                                  child: _buildFeatureCard(
-                                    context,
-                                    title: 'Prayer Times',
-                                    subtitle: 'Daily Schedule',
-                                    icon: Icons.access_time_filled_rounded,
-                                    color: const Color(0xFF1565C0),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const PrayerTimesScreen(),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ],
-                          );
-                        },
-                      ),
-
-                      SizedBox(height: 16.h),
-
                       Consumer<RemoteConfigProvider>(
                         builder: (context, remoteConfig, child) {
                           final hasRamadan = remoteConfig.showRamadanCalendar;
@@ -433,82 +379,68 @@ class HomeScreen extends StatelessWidget {
                           if (!hasRamadan && !hasAdhkar) {
                             return const SizedBox.shrink();
                           }
+                          final items = <Widget>[
+                            _buildFeatureCard(
+                              context,
+                              title: 'Qibla Compass',
+                              subtitle: 'Accurate Direction',
+                              icon: Icons.explore_rounded,
+                              color: const Color(0xFF2E7D32),
+                              onTap: () {},
+                            ),
 
-                          return Row(
-                            children: [
-                              if (hasRamadan) ...[
-                                Expanded(
-                                  child: _buildFeatureCard(
-                                    context,
-                                    title: 'Ramadan Calendar',
-                                    subtitle: 'Hijri 1447 Schedule',
-                                    icon: Icons.calendar_month_rounded,
-                                    color: const Color(0xFFE65100),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const RamadanCalendarScreen(),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                if (hasAdhkar) SizedBox(width: 16.w),
-                              ],
-                              if (hasAdhkar)
-                                Expanded(
-                                  child: _buildFeatureCard(
-                                    context,
-                                    title: 'Daily Adhkar',
-                                    subtitle: 'Morning & Evening',
-                                    icon: Icons.auto_stories_rounded,
-                                    color: const Color(0xFF7B1FA2),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const AdhkarDetailsScreen(),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                            ],
-                          );
-                        },
-                      ),
+                            if (remoteConfig.showPrayersTime)
+                              _buildFeatureCard(
+                                context,
+                                title: 'Prayer Times',
+                                subtitle: 'Daily Schedule',
+                                icon: Icons.access_time_filled_rounded,
+                                color: const Color(0xFF1565C0),
+                                onTap: () {},
+                              ),
 
-                      SizedBox(height: 16.h),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildFeatureCard(
+                            _buildFeatureCard(
                               context,
                               title: 'Quran',
                               subtitle: 'Read & Listen',
                               icon: Icons.menu_book_rounded,
                               color: const Color(0xFF00695C),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const QuranScreen(),
-                                  ),
-                                );
-                              },
+                              onTap: () {},
                             ),
-                          ),
-                          SizedBox(width: 16.w),
-                          Expanded(child: SizedBox()), // Placeholder to keep grid 2-column size
-                        ],
+
+                            if (hasRamadan)
+                              _buildFeatureCard(
+                                context,
+                                title: 'Ramadan Calendar',
+                                subtitle: 'Hijri 1447 Schedule',
+                                icon: Icons.calendar_month_rounded,
+                                color: const Color(0xFFE65100),
+                                onTap: () {},
+                              ),
+
+                            if (hasAdhkar)
+                              _buildFeatureCard(
+                                context,
+                                title: 'Daily Adhkar',
+                                subtitle: 'Morning & Evening',
+                                icon: Icons.auto_stories_rounded,
+                                color: const Color(0xFF7B1FA2),
+                                onTap: () {},
+                              ),
+                          ];
+
+                          return GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10.w,
+                            mainAxisSpacing: 10.h,
+                            childAspectRatio: 1.1,
+                            children: items,
+                          );
+                        },
                       ),
-
-                      SizedBox(height: 24.h),
-
+                      26.verticalSpace,
                       // Quick Access / About Section (Placeholder for clean look)
                       Container(
                         width: double.infinity,
@@ -602,8 +534,8 @@ class HomeScreen extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(24.r),
       child: Container(
-        height: 160.h,
-        padding: EdgeInsets.all(20.r),
+        width: double.infinity,
+        padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
           color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
           borderRadius: BorderRadius.circular(20.r),
@@ -635,6 +567,7 @@ class HomeScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                SizedBox(height: 4.h),
                 Text(
                   subtitle,
                   style: GoogleFonts.outfit(
