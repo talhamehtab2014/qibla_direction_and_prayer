@@ -386,7 +386,15 @@ class HomeScreen extends StatelessWidget {
                               subtitle: 'Accurate Direction',
                               icon: Icons.explore_rounded,
                               color: const Color(0xFF2E7D32),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const QiblaCompassScreen(),
+                                  ),
+                                );
+                              },
                             ),
 
                             if (remoteConfig.showPrayersTime)
@@ -396,7 +404,15 @@ class HomeScreen extends StatelessWidget {
                                 subtitle: 'Daily Schedule',
                                 icon: Icons.access_time_filled_rounded,
                                 color: const Color(0xFF1565C0),
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PrayerTimesScreen(),
+                                    ),
+                                  );
+                                },
                               ),
 
                             _buildFeatureCard(
@@ -405,7 +421,14 @@ class HomeScreen extends StatelessWidget {
                               subtitle: 'Read & Listen',
                               icon: Icons.menu_book_rounded,
                               color: const Color(0xFF00695C),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const QuranScreen(),
+                                  ),
+                                );
+                              },
                             ),
 
                             if (hasRamadan)
@@ -415,7 +438,15 @@ class HomeScreen extends StatelessWidget {
                                 subtitle: 'Hijri 1447 Schedule',
                                 icon: Icons.calendar_month_rounded,
                                 color: const Color(0xFFE65100),
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const RamadanCalendarScreen(),
+                                    ),
+                                  );
+                                },
                               ),
 
                             if (hasAdhkar)
@@ -425,7 +456,15 @@ class HomeScreen extends StatelessWidget {
                                 subtitle: 'Morning & Evening',
                                 icon: Icons.auto_stories_rounded,
                                 color: const Color(0xFF7B1FA2),
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AdhkarDetailsScreen(),
+                                    ),
+                                  );
+                                },
                               ),
                           ];
 
