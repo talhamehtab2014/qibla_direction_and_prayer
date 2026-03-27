@@ -12,6 +12,7 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:qibla_direction/widgets/hadith_swipe_card.dart';
 import 'package:qibla_direction/screens/ramadan_calendar_screen.dart';
 import 'package:qibla_direction/screens/adhkar_details_screen.dart';
+import 'package:qibla_direction/screens/quran_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:qibla_direction/providers/remote_config_provider.dart';
 import 'package:qibla_direction/providers/prayer_provider.dart';
@@ -478,6 +479,32 @@ class HomeScreen extends StatelessWidget {
                             ],
                           );
                         },
+                      ),
+
+                      SizedBox(height: 16.h),
+
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildFeatureCard(
+                              context,
+                              title: 'Quran',
+                              subtitle: 'Read & Listen',
+                              icon: Icons.menu_book_rounded,
+                              color: const Color(0xFF00695C),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const QuranScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 16.w),
+                          Expanded(child: SizedBox()), // Placeholder to keep grid 2-column size
+                        ],
                       ),
 
                       SizedBox(height: 24.h),

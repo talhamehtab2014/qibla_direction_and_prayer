@@ -10,6 +10,7 @@ import 'package:qibla_direction/providers/ramadan_provider.dart';
 import 'package:qibla_direction/providers/adhkar_provider.dart';
 import 'package:qibla_direction/providers/remote_config_provider.dart';
 import 'package:qibla_direction/providers/ramadan_timing_provider.dart';
+import 'package:qibla_direction/providers/quran_provider.dart';
 import 'package:qibla_direction/screens/splash_screen.dart';
 import 'package:qibla_direction/services/notification_service.dart';
 import 'package:qibla_direction/theme/app_theme.dart';
@@ -30,7 +31,7 @@ Future<void> main() async {
   try {
     await NotificationService().initialize();
   } catch (e) {
-    debugPrint("Failed to initialize NotificationService: $e");
+    debugPrint("Failed to initialize NotificationService: \$e");
   }
 
   await MobileAds.instance.initialize();
@@ -52,6 +53,7 @@ Future<void> main() async {
         ChangeNotifierProvider(
           create: (_) => RamadanTimingProvider()..fetchTodayTiming(),
         ),
+        ChangeNotifierProvider(create: (_) => QuranProvider()..loadFullQuran()),
       ],
       child: const MyApp(),
     ),
